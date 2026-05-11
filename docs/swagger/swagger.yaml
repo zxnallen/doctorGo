@@ -1,0 +1,559 @@
+basePath: /api/v1
+definitions:
+  admin.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  auth.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  auth.RegisterRequest:
+    properties:
+      email:
+        maxLength: 128
+        type: string
+      password:
+        maxLength: 64
+        minLength: 8
+        type: string
+      phone:
+        maxLength: 32
+        type: string
+      username:
+        maxLength: 64
+        minLength: 3
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  news.CreateCategoryRequest:
+    properties:
+      name:
+        maxLength: 64
+        type: string
+      sort:
+        type: integer
+      status:
+        enum:
+        - 0
+        - 1
+        type: integer
+    required:
+    - name
+    type: object
+  news.CreateRequest:
+    properties:
+      author:
+        maxLength: 64
+        type: string
+      category_id:
+        type: integer
+      content:
+        type: string
+      cover_url:
+        maxLength: 512
+        type: string
+      published_at:
+        type: string
+      status:
+        enum:
+        - 0
+        - 1
+        - 2
+        type: integer
+      summary:
+        maxLength: 500
+        type: string
+      title:
+        maxLength: 200
+        type: string
+    required:
+    - title
+    type: object
+  news.UpdateCategoryRequest:
+    properties:
+      name:
+        maxLength: 64
+        type: string
+      sort:
+        type: integer
+      status:
+        enum:
+        - 0
+        - 1
+        type: integer
+    required:
+    - name
+    type: object
+  news.UpdateCategoryStatusRequest:
+    properties:
+      status:
+        enum:
+        - 0
+        - 1
+        type: integer
+    type: object
+  news.UpdateRequest:
+    properties:
+      author:
+        maxLength: 64
+        type: string
+      category_id:
+        type: integer
+      content:
+        type: string
+      cover_url:
+        maxLength: 512
+        type: string
+      published_at:
+        type: string
+      status:
+        enum:
+        - 0
+        - 1
+        - 2
+        type: integer
+      summary:
+        maxLength: 500
+        type: string
+      title:
+        maxLength: 200
+        type: string
+    required:
+    - title
+    type: object
+  news.UpdateStatusRequest:
+    properties:
+      status:
+        enum:
+        - 0
+        - 1
+        - 2
+        type: integer
+    type: object
+  response.Body:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: 肿瘤医生项目后端接口文档
+  title: Doctor Go API
+  version: "1.0"
+paths:
+  /admin/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登录参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      summary: 后台管理员登录
+      tags:
+      - Admin Auth
+  /admin/news:
+    get:
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      - description: 分类 ID
+        in: query
+        name: category_id
+        type: integer
+      - description: 状态
+        in: query
+        name: status
+        type: integer
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 后台资讯列表
+      tags:
+      - Admin News
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 资讯参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/news.CreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 创建资讯
+      tags:
+      - Admin News
+  /admin/news-categories:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 分类参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/news.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 创建资讯分类
+      tags:
+      - Admin News Categories
+  /admin/news-categories/{id}:
+    delete:
+      parameters:
+      - description: 分类 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 删除资讯分类
+      tags:
+      - Admin News Categories
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 分类 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 分类参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/news.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 更新资讯分类
+      tags:
+      - Admin News Categories
+  /admin/news-categories/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: 分类 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 状态参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/news.UpdateCategoryStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 更新资讯分类状态
+      tags:
+      - Admin News Categories
+  /admin/news/{id}:
+    delete:
+      parameters:
+      - description: 资讯 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 删除资讯
+      tags:
+      - Admin News
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 资讯 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 资讯参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/news.UpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 更新资讯
+      tags:
+      - Admin News
+  /admin/news/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: 资讯 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 状态参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/news.UpdateStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 更新资讯状态
+      tags:
+      - Admin News
+  /admin/operation-logs:
+    get:
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      - description: 管理员 ID
+        in: query
+        name: admin_id
+        type: integer
+      - description: 动作
+        in: query
+        name: action
+        type: string
+      - description: 资源
+        in: query
+        name: resource
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      security:
+      - BearerAuth: []
+      summary: 后台操作日志列表
+      tags:
+      - Admin Operation Logs
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登录参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      summary: 用户登录
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 注册参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Body'
+      summary: 用户注册
+      tags:
+      - Auth
+  /news:
+    get:
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      - description: 分类 ID
+        in: query
+        name: category_id
+        type: integer
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      summary: 前台资讯列表
+      tags:
+      - News
+  /news/{id}:
+    get:
+      parameters:
+      - description: 资讯 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      summary: 前台资讯详情
+      tags:
+      - News
+  /news/categories:
+    get:
+      parameters:
+      - description: 只看启用分类
+        in: query
+        name: only_enabled
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Body'
+      summary: 资讯分类列表
+      tags:
+      - News Categories
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

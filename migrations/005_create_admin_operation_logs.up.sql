@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS admin_operation_logs (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  admin_id BIGINT UNSIGNED NOT NULL,
+  username VARCHAR(64) NOT NULL DEFAULT '',
+  action VARCHAR(64) NOT NULL,
+  resource VARCHAR(64) NOT NULL,
+  resource_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  method VARCHAR(16) NOT NULL DEFAULT '',
+  path VARCHAR(255) NOT NULL DEFAULT '',
+  status_code INT NOT NULL DEFAULT 0,
+  success TINYINT(1) NOT NULL DEFAULT 1,
+  remark VARCHAR(255) NOT NULL DEFAULT '',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted_at DATETIME NULL,
+  PRIMARY KEY (id),
+  KEY idx_admin_operation_logs_admin_id (admin_id),
+  KEY idx_admin_operation_logs_action (action),
+  KEY idx_admin_operation_logs_resource (resource),
+  KEY idx_admin_operation_logs_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

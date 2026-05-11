@@ -1,0 +1,31 @@
+app:
+  name: doctor-go
+  env: prod
+  addr: 127.0.0.1:8080
+  trusted_proxies:
+    - 127.0.0.1
+
+admin:
+  default_username: ""
+  default_password: ""
+  default_nickname: ""
+
+mysql:
+  dsn: ""
+
+redis:
+  addr: ""
+  password: ""
+  db: 0
+
+jwt:
+  secret: ""
+  expire_seconds: 86400
+  refresh_expire_seconds: 604800
+
+oss:
+  endpoint: ""
+  access_key_id: ""
+  access_key_secret: ""
+  bucket: ""
+  base_url: ""

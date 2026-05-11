@@ -1,0 +1,15 @@
+[Unit]
+Description=doctor-go API service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/doctor-go
+ExecStart=/opt/doctor-go/doctor-go
+Restart=always
+RestartSec=5
+Environment=APP_ENV=prod
+Environment=APP_ADDR=127.0.0.1:8080
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+app:
+  name: doctor-go
+  env: local
+  addr: :8080
+
+mysql:
+  dsn: root:root@tcp(127.0.0.1:3306)/doctor_go?charset=utf8mb4&parseTime=True&loc=Local
+
+redis:
+  addr: 127.0.0.1:6379
+  password: ""
+  db: 0
+
+jwt:
+  secret: change-me-in-production
+  expire_seconds: 86400
+
+oss:
+  endpoint: ""
+  access_key_id: ""
+  access_key_secret: ""
+  bucket: ""
+  base_url: ""

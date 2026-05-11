@@ -1,0 +1,72 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: doctor-go-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      APP_ENV: prod
+      APP_ADDR: :8080
+      MYSQL_DSN: root:root@tcp(mysql:3306)/doctor_go?charset=utf8mb4&parseTime=True&loc=Local
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+      JWT_SECRET: local-compose-jwt-secret-please-change
+      JWT_EXPIRE_SECONDS: 86400
+      JWT_REFRESH_EXPIRE_SECONDS: 604800
+      APP_TRUSTED_PROXIES: 127.0.0.1,::1,172.16.0.0/12,10.0.0.0/8
+    env_file:
+      - path: .env.deploy
+        required: false
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./configs:/app/configs:ro
+      - ./docs/swagger:/app/docs/swagger:ro
+    command: ["/bin/sh", "-c", "/app/doctor-go-migrate -action up && /app/doctor-go"]
+
+  mysql:
+    image: mysql:8.0
+    container_name: doctor-go-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: doctor_go
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
+    volumes:
+      - doctor_go_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: doctor-go-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - doctor_go_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  doctor_go_mysql_data:
+  doctor_go_redis_data:

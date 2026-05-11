@@ -1,0 +1,34 @@
+app:
+  name: doctor-go
+  env: local
+  addr: :8080
+  trusted_proxies:
+    - 127.0.0.1
+    - ::1
+    - 172.16.0.0/12
+    - 10.0.0.0/8
+
+admin:
+  default_username: admin
+  default_password: admin123456
+  default_nickname: 系统管理员
+
+mysql:
+  dsn: root:root@tcp(127.0.0.1:3306)/doctor_go?charset=utf8mb4&parseTime=True&loc=Local
+
+redis:
+  addr: 127.0.0.1:6379
+  password: ""
+  db: 0
+
+jwt:
+  secret: change-me-in-local
+  expire_seconds: 86400
+  refresh_expire_seconds: 604800
+
+oss:
+  endpoint: ""
+  access_key_id: ""
+  access_key_secret: ""
+  bucket: ""
+  base_url: ""
